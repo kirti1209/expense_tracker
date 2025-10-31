@@ -33,12 +33,12 @@ flutter:
   uses-material-design: true
   
   assets:
-    - lib/assets/icon_app.jpg
+    - assets/icon_app.jpg
 
 flutter_launcher_icons:
   android: true
   ios: true
-  image_path: "lib/assets/icon_app.jpg"
+  image_path: "assets/icon_app.jpg"
   min_sdk_android: 21
   remove_alpha_ios: true
 
