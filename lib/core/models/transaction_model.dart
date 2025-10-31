@@ -71,7 +71,7 @@ class TransactionModel extends Equatable {
       amount: (json['amount'] as num).toDouble(),
       date: DateTime.parse(json['date']),
       category: Category.fromName(json['category']),
-      type: json['type'] == 'income' ? TransactionType.income : TransactionType.expense,
+      type: json['type'].toString().toLowerCase() == 'income' ? TransactionType.income : TransactionType.expense,
       description: json['description'],
     );
   }

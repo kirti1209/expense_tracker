@@ -13,18 +13,20 @@ class MainNavigation extends StatefulWidget {
 
 class _MainNavigationState extends State<MainNavigation> {
   int _currentIndex = 0;
-
-  final List<Widget> _pages = [
-    const DashboardPage(),
-    const TransactionsPage(),
-    const BudgetsPage(),
-    const SettingsPage(),
-  ];
+  int _dashboardKey = 0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _pages[_currentIndex],
+      body: IndexedStack(
+        index: _currentIndex,
+        children: [
+          DashboardPage(key: ValueKey(_dashboardKey)),
+          const TransactionsPage(),
+          const BudgetsPage(),
+          const SettingsPage(),
+        ],
+      ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           boxShadow: [
@@ -38,9 +40,17 @@ class _MainNavigationState extends State<MainNavigation> {
         child: BottomNavigationBar(
           currentIndex: _currentIndex,
           onTap: (index) {
-            setState(() {
-              _currentIndex = index;
-            });
+            // If switching to dashboard, recreate it to refresh data
+            if (index == 0 && _currentIndex != 0) {
+              setState(() {
+                _dashboardKey++;
+                _currentIndex = index;
+              });
+            } else {
+              setState(() {
+                _currentIndex = index;
+              });
+            }
           },
           type: BottomNavigationBarType.fixed,
           selectedIconTheme: IconThemeData(size: 28),

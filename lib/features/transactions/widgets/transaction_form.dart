@@ -63,7 +63,17 @@ class _TransactionFormState extends State<TransactionForm> {
   }
 
   void _submitForm() {
-    if (_formKey.currentState!.validate() && _selectedCategory != null) {
+    if (_formKey.currentState!.validate()) {
+      if (_selectedCategory == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Please select a category'),
+            backgroundColor: Colors.red,
+          ),
+        );
+        return;
+      }
+      
       final transaction = TransactionModel(
         id: widget.transaction?.id ?? DateTime.now().millisecondsSinceEpoch.toString(),
         title: _titleController.text.trim(),
@@ -96,6 +106,23 @@ class _TransactionFormState extends State<TransactionForm> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+            // Back Button
+            Row(
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.arrow_back),
+                  onPressed: () => Navigator.of(context).pop(),
+                  tooltip: 'Back',
+                ),
+                Text(
+                  widget.transaction == null ? 'Add Transaction' : 'Edit Transaction',
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
             // Transaction Type Segmented Button
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -124,6 +151,8 @@ class _TransactionFormState extends State<TransactionForm> {
                   onSelectionChanged: (Set<TransactionType> newSelection) {
                     setState(() {
                       _selectedType = newSelection.first;
+                      // Reset category when switching between expense and income
+                      _selectedCategory = null;
                     });
                   },
                 ),
@@ -146,11 +175,12 @@ class _TransactionFormState extends State<TransactionForm> {
               controller: _amountController,
               validator: Validators.validateAmount,
               keyboardType: TextInputType.number,
-              suffixIcon: const Text('\$'),
+           
             ),
 
             // Category Dropdown
             CategoryDropdown(
+              key: ValueKey(_selectedType),
               selectedCategory: _selectedCategory,
               onChanged: (Category? category) {
                 setState(() {

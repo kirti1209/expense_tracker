@@ -38,11 +38,17 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     Emitter<SettingsState> emit,
   ) async {
     try {
+      // Emit immediately for instant UI feedback
       final newSettings = state.settings.copyWith(isDarkMode: !state.settings.isDarkMode);
-      await StorageService.saveSettings(newSettings);
       emit(state.copyWith(settings: newSettings));
+      // Save to storage in the background
+      await StorageService.saveSettings(newSettings);
     } catch (e) {
-      emit(state.copyWith(error: 'Failed to update theme: $e'));
+      // Revert on error
+      emit(state.copyWith(
+        settings: state.settings.copyWith(isDarkMode: !state.settings.isDarkMode),
+        error: 'Failed to update theme: $e',
+      ));
     }
   }
 

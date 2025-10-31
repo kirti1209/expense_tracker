@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../core/models/transaction_model.dart';
 import '../../../core/utils/formatters.dart';
 import '../../../shared/widgets/empty_state.dart';
+import '../../../shared/enums/transaction_type.dart';
 
 class RecentTransactions extends StatelessWidget {
   final List<TransactionModel> transactions;
@@ -54,7 +55,7 @@ class RecentTransactions extends StatelessWidget {
   Widget _buildTransactionItem(BuildContext context, TransactionModel transaction) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    final isIncome = transaction.type.name == 'income';
+    final isIncome = transaction.type == TransactionType.income;
     
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),

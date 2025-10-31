@@ -37,7 +37,17 @@ class _BudgetFormState extends State<BudgetForm> {
   }
 
   void _submitForm() {
-    if (_formKey.currentState!.validate() && _selectedCategory != null) {
+    if (_formKey.currentState!.validate()) {
+      if (_selectedCategory == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Please select a category'),
+            backgroundColor: Colors.red,
+          ),
+        );
+        return;
+      }
+      
       final now = DateTime.now();
       final budget = BudgetModel(
         category: _selectedCategory!,
@@ -86,7 +96,7 @@ class _BudgetFormState extends State<BudgetForm> {
               controller: _amountController,
               validator: Validators.validateAmount,
               keyboardType: TextInputType.number,
-              suffixIcon: const Text('\$'),
+              
             ),
             const SizedBox(height: 20),
             ElevatedButton(

@@ -13,74 +13,84 @@ class BudgetsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => BudgetsBloc()..add(LoadBudgets()),
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Budgets'),
-          centerTitle: true,
-          actions: [
-            IconButton(
-              onPressed: () {
-                showModalBottomSheet(
-                  context: context,
-                  isScrollControlled: true,
-                  builder: (context) {
-                    return Padding(
-                      padding: EdgeInsets.only(
-                        bottom: MediaQuery.of(context).viewInsets.bottom,
-                      ),
-                      child: const BudgetForm(),
-                    );
-                  },
-                );
-              },
-              icon: const Icon(Icons.add),
-            ),
-          ],
-        ),
-        body: BlocBuilder<BudgetsBloc, BudgetsState>(
-          builder: (context, state) {
-            if (state.status == BudgetsStatus.loading) {
-              return const Center(child: CircularProgressIndicator());
-            }
-
-            if (state.budgets.isEmpty) {
-              return const EmptyState(
-                message: 'No budgets set',
-                subtitle: 'Set monthly budgets to track your spending',
-                icon: Icons.account_balance_wallet,
-              );
-            }
-
-            return ListView.builder(
-              itemCount: state.budgets.length,
-              itemBuilder: (context, index) {
-                final budget = state.budgets[index];
-                final utilization = state.budgetUtilization[budget.category] ?? 0.0;
-
-                return BudgetCard(
-                  budget: budget,
-                  utilization: utilization,
-                  onEdit: () {
-                    showModalBottomSheet(
-                      context: context,
-                      isScrollControlled: true,
-                      builder: (context) {
-                        return Padding(
+      child: Builder(
+        builder: (blocContext) => Scaffold(
+          appBar: AppBar(
+            title: const Text('Budgets'),
+            centerTitle: true,
+            actions: [
+              IconButton(
+                onPressed: () {
+                  final budgetsBloc = blocContext.read<BudgetsBloc>();
+                  showModalBottomSheet(
+                    context: blocContext,
+                    isScrollControlled: true,
+                    builder: (modalContext) {
+                      return BlocProvider.value(
+                        value: budgetsBloc,
+                        child: Padding(
                           padding: EdgeInsets.only(
-                            bottom: MediaQuery.of(context).viewInsets.bottom,
+                            bottom: MediaQuery.of(modalContext).viewInsets.bottom,
                           ),
-                          child: BudgetForm(budget: budget),
-                        );
-                      },
-                    );
-                  },
-                  onDelete: () {
-                    _showDeleteBudgetDialog(context, budget);
-                  },
+                          child: const BudgetForm(),
+                        ),
+                      );
+                    },
+                  );
+                },
+                icon: const Icon(Icons.add),
+              ),
+            ],
+          ),
+          body: BlocBuilder<BudgetsBloc, BudgetsState>(
+            builder: (context, state) {
+              if (state.status == BudgetsStatus.loading) {
+                return const Center(child: CircularProgressIndicator());
+              }
+
+              if (state.budgets.isEmpty) {
+                return const EmptyState(
+                  message: 'No budgets set',
+                  subtitle: 'Set monthly budgets to track your spending',
+                  icon: Icons.account_balance_wallet,
                 );
-              },
-            );
-          },
+              }
+
+              return ListView.builder(
+                itemCount: state.budgets.length,
+                itemBuilder: (context, index) {
+                  final budget = state.budgets[index];
+                  final utilization = state.budgetUtilization[budget.category] ?? 0.0;
+
+                  return BudgetCard(
+                    budget: budget,
+                    utilization: utilization,
+                    onEdit: () {
+                      final budgetsBloc = context.read<BudgetsBloc>();
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        builder: (modalContext) {
+                          return BlocProvider.value(
+                            value: budgetsBloc,
+                            child: Padding(
+                              padding: EdgeInsets.only(
+                                bottom: MediaQuery.of(modalContext).viewInsets.bottom,
+                              ),
+                              child: BudgetForm(budget: budget),
+                            ),
+                          );
+                        },
+                      );
+                    },
+                    onDelete: () {
+                      _showDeleteBudgetDialog(context, budget);
+                    },
+                  );
+                },
+              );
+            },
+          ),
         ),
       ),
     );
@@ -100,8 +110,9 @@ class BudgetsPage extends StatelessWidget {
             ),
             TextButton(
               onPressed: () {
+                final budgetsBloc = context.read<BudgetsBloc>();
                 Navigator.of(context).pop();
-                context.read<BudgetsBloc>().add(DeleteBudget(budget));
+                budgetsBloc.add(DeleteBudget(budget));
               },
               child: Text(
                 "Delete",

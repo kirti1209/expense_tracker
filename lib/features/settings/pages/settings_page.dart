@@ -7,40 +7,37 @@ class SettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => SettingsBloc()..add(LoadSettings()),
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Settings'),
-          centerTitle: true,
-        ),
-        body: BlocConsumer<SettingsBloc, SettingsState>(
-          listener: (context, state) {
-            if (state.message != null) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.message!)),
-              );
-              context.read<SettingsBloc>().add(const LoadSettings());
-            }
-            if (state.error != null) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.error!)),
-              );
-            }
-          },
-          builder: (context, state) {
-            return ListView(
-              padding: const EdgeInsets.all(16.0),
-              children: [
-                _buildThemeSetting(context, state),
-                const SizedBox(height: 16),
-                _buildDataManagementSection(context),
-                const SizedBox(height: 16),
-                _buildAppInfoSection(context),
-              ],
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Settings'),
+        centerTitle: true,
+      ),
+      body: BlocConsumer<SettingsBloc, SettingsState>(
+        listener: (context, state) {
+          if (state.message != null) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(state.message!)),
             );
-          },
-        ),
+            context.read<SettingsBloc>().add(const LoadSettings());
+          }
+          if (state.error != null) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(state.error!)),
+            );
+          }
+        },
+        builder: (context, state) {
+          return ListView(
+            padding: const EdgeInsets.all(16.0),
+            children: [
+              _buildThemeSetting(context, state),
+              const SizedBox(height: 16),
+              _buildDataManagementSection(context),
+              const SizedBox(height: 16),
+              _buildAppInfoSection(context),
+            ],
+          );
+        },
       ),
     );
   }

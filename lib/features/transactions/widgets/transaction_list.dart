@@ -157,15 +157,19 @@ class _TransactionListItem extends StatelessWidget {
         ),
         child: ListTile(
           onTap: () {
+            final transactionsBloc = context.read<TransactionsBloc>();
             showModalBottomSheet(
               context: context,
               isScrollControlled: true,
-              builder: (context) {
-                return Padding(
-                  padding: EdgeInsets.only(
-                    bottom: MediaQuery.of(context).viewInsets.bottom,
+              builder: (modalContext) {
+                return BlocProvider.value(
+                  value: transactionsBloc,
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                      bottom: MediaQuery.of(modalContext).viewInsets.bottom,
+                    ),
+                    child: TransactionForm(transaction: transaction),
                   ),
-                  child: TransactionForm(transaction: transaction),
                 );
               },
             );
@@ -194,17 +198,21 @@ class _TransactionListItem extends StatelessWidget {
           subtitle: Padding(
             padding: const EdgeInsets.only(top: 4),
             child: Row(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
                   transaction.category.emoji,
                   style: const TextStyle(fontSize: 14),
                 ),
                 const SizedBox(width: 6),
-                Text(
-                  transaction.category.name,
-                  style: TextStyle(
-                    color: Theme.of(context).textTheme.bodySmall?.color?.withOpacity(0.7),
-                    fontSize: 13,
+                Flexible(
+                  child: Text(
+                    transaction.category.name,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: Theme.of(context).textTheme.bodySmall?.color?.withOpacity(0.7),
+                      fontSize: 13,
+                    ),
                   ),
                 ),
                 const SizedBox(width: 8),
@@ -215,11 +223,14 @@ class _TransactionListItem extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 8),
-                Text(
-                  Formatters.formatDate(transaction.date),
-                  style: TextStyle(
-                    color: Theme.of(context).textTheme.bodySmall?.color?.withOpacity(0.7),
-                    fontSize: 13,
+                Flexible(
+                  child: Text(
+                    Formatters.formatDate(transaction.date),
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: Theme.of(context).textTheme.bodySmall?.color?.withOpacity(0.7),
+                      fontSize: 13,
+                    ),
                   ),
                 ),
               ],

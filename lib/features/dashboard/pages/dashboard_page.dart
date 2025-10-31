@@ -5,13 +5,32 @@ import '../widgets/balance_card.dart';
 import '../widgets/expense_chart.dart';
 import '../widgets/recent_transactions.dart';
 
-class DashboardPage extends StatelessWidget {
+class DashboardPage extends StatefulWidget {
   const DashboardPage({Key? key}) : super(key: key);
 
   @override
+  State<DashboardPage> createState() => _DashboardPageState();
+}
+
+class _DashboardPageState extends State<DashboardPage> {
+  late DashboardBloc _dashboardBloc;
+
+  @override
+  void initState() {
+    super.initState();
+    _dashboardBloc = DashboardBloc()..add(LoadDashboardData());
+  }
+
+  @override
+  void dispose() {
+    _dashboardBloc.close();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => DashboardBloc()..add(LoadDashboardData()),
+    return BlocProvider.value(
+      value: _dashboardBloc,
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Dashboard'),
