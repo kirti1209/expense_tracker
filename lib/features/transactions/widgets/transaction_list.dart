@@ -53,15 +53,17 @@ class _TransactionListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isIncome = transaction.type.name == 'income';
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     final bgColor = isIncome 
-        ? const Color(0xFFECFDF5)
-        : const Color(0xFFFEF2F2);
+        ? (isDark ? const Color(0xFF064E3B).withOpacity(0.3) : const Color(0xFFECFDF5))
+        : (isDark ? const Color(0xFF7F1D1D).withOpacity(0.3) : const Color(0xFFFEF2F2));
     final iconBgColor = isIncome
-        ? const Color(0xFF10B981).withOpacity(0.1)
-        : const Color(0xFFEF4444).withOpacity(0.1);
+        ? const Color(0xFF10B981).withOpacity(isDark ? 0.2 : 0.1)
+        : theme.colorScheme.error.withOpacity(isDark ? 0.2 : 0.1);
     final iconColor = isIncome 
         ? const Color(0xFF10B981)
-        : const Color(0xFFEF4444);
+        : theme.colorScheme.error;
 
     return Dismissible(
       key: Key(transaction.id),
@@ -69,7 +71,10 @@ class _TransactionListItem extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
           gradient: LinearGradient(
-            colors: [const Color(0xFFEF4444), const Color(0xFFDC2626)],
+            colors: [
+              Theme.of(context).colorScheme.error,
+              Theme.of(context).colorScheme.error.withOpacity(0.8),
+            ],
           ),
         ),
         alignment: Alignment.centerRight,
@@ -95,7 +100,7 @@ class _TransactionListItem extends StatelessWidget {
                 ElevatedButton(
                   onPressed: () => Navigator.of(context).pop(true),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFEF4444),
+                    backgroundColor: Theme.of(context).colorScheme.error,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -121,14 +126,14 @@ class _TransactionListItem extends StatelessWidget {
                 Text('Transaction deleted'),
               ],
             ),
-            backgroundColor: const Color(0xFF1E293B),
+            backgroundColor: Theme.of(context).cardTheme.color ?? Theme.of(context).colorScheme.surface,
             behavior: SnackBarBehavior.floating,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),
             action: SnackBarAction(
               label: 'UNDO',
-              textColor: const Color(0xFF818CF8),
+              textColor: Theme.of(context).colorScheme.secondary,
               onPressed: () {
                 context.read<TransactionsBloc>().add(
                       AddTransaction(transaction),
@@ -141,9 +146,14 @@ class _TransactionListItem extends StatelessWidget {
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Theme.of(context).cardTheme.color,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: const Color(0xFFE2E8F0), width: 1),
+          border: Border.all(
+            color: Theme.of(context).brightness == Brightness.dark 
+                ? const Color(0xFF334155) 
+                : const Color(0xFFE2E8F0), 
+            width: 1,
+          ),
         ),
         child: ListTile(
           onTap: () {
@@ -193,20 +203,22 @@ class _TransactionListItem extends StatelessWidget {
                 Text(
                   transaction.category.name,
                   style: TextStyle(
-                    color: Colors.grey[600],
+                    color: Theme.of(context).textTheme.bodySmall?.color?.withOpacity(0.7),
                     fontSize: 13,
                   ),
                 ),
                 const SizedBox(width: 8),
                 Text(
                   '•',
-                  style: TextStyle(color: Colors.grey[400]),
+                  style: TextStyle(
+                    color: Theme.of(context).textTheme.bodySmall?.color?.withOpacity(0.5),
+                  ),
                 ),
                 const SizedBox(width: 8),
                 Text(
                   Formatters.formatDate(transaction.date),
                   style: TextStyle(
-                    color: Colors.grey[600],
+                    color: Theme.of(context).textTheme.bodySmall?.color?.withOpacity(0.7),
                     fontSize: 13,
                   ),
                 ),

@@ -23,7 +23,14 @@ class BudgetsPage extends StatelessWidget {
                 showModalBottomSheet(
                   context: context,
                   isScrollControlled: true,
-                  builder: (context) => const BudgetForm(),
+                  builder: (context) {
+                    return Padding(
+                      padding: EdgeInsets.only(
+                        bottom: MediaQuery.of(context).viewInsets.bottom,
+                      ),
+                      child: const BudgetForm(),
+                    );
+                  },
                 );
               },
               icon: const Icon(Icons.add),
@@ -57,7 +64,14 @@ class BudgetsPage extends StatelessWidget {
                     showModalBottomSheet(
                       context: context,
                       isScrollControlled: true,
-                      builder: (context) => BudgetForm(budget: budget),
+                      builder: (context) {
+                        return Padding(
+                          padding: EdgeInsets.only(
+                            bottom: MediaQuery.of(context).viewInsets.bottom,
+                          ),
+                          child: BudgetForm(budget: budget),
+                        );
+                      },
                     );
                   },
                   onDelete: () {
@@ -89,9 +103,9 @@ class BudgetsPage extends StatelessWidget {
                 Navigator.of(context).pop();
                 context.read<BudgetsBloc>().add(DeleteBudget(budget));
               },
-              child: const Text(
+              child: Text(
                 "Delete",
-                style: TextStyle(color: Colors.red),
+                style: TextStyle(color: Theme.of(context).colorScheme.error),
               ),
             ),
           ],

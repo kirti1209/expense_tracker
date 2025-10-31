@@ -88,13 +88,14 @@ class _TransactionFormState extends State<TransactionForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Form(
-        key: _formKey,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
             // Transaction Type Segmented Button
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -208,6 +209,7 @@ class _TransactionFormState extends State<TransactionForm> {
             ),
           ],
         ),
+      ),
       ),
     );
   }

@@ -23,13 +23,13 @@ class EmptyState extends StatelessWidget {
             Icon(
               icon,
               size: 64,
-              color: Colors.grey[400],
+              color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.5),
             ),
             const SizedBox(height: 16),
             Text(
               message,
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                color: Colors.grey[600],
+                color: Theme.of(context).textTheme.headlineSmall?.color?.withOpacity(0.7),
               ),
               textAlign: TextAlign.center,
             ),
@@ -38,7 +38,7 @@ class EmptyState extends StatelessWidget {
               Text(
                 subtitle!,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Colors.grey[500],
+                  color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.7),
                 ),
                 textAlign: TextAlign.center,
               ),

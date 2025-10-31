@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../../core/constants/category_constants.dart';
 import '../../../core/models/budget_model.dart';
 import '../../../core/utils/formatters.dart';
 
@@ -19,8 +18,11 @@ class BudgetCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final isOverBudget = utilization > 1.0;
-    final progressColor = isOverBudget ? Colors.red : Colors.blue;
+    final progressColor = isOverBudget 
+        ? theme.colorScheme.error 
+        : theme.colorScheme.primary;
 
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
@@ -70,7 +72,9 @@ class BudgetCard extends StatelessWidget {
             const SizedBox(height: 8),
             LinearProgressIndicator(
               value: utilization > 1.0 ? 1.0 : utilization,
-              backgroundColor: Colors.grey[300],
+              backgroundColor: theme.brightness == Brightness.dark 
+                  ? const Color(0xFF334155) 
+                  : const Color(0xFFE2E8F0),
               color: progressColor,
             ),
             const SizedBox(height: 4),
@@ -87,7 +91,9 @@ class BudgetCard extends StatelessWidget {
                 Text(
                   isOverBudget ? 'Over Budget!' : 'On Track',
                   style: TextStyle(
-                    color: isOverBudget ? Colors.red : Colors.green,
+                    color: isOverBudget 
+                        ? theme.colorScheme.error 
+                        : const Color(0xFF10B981),
                     fontWeight: FontWeight.bold,
                   ),
                 ),

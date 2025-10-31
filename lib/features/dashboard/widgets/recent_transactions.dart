@@ -52,19 +52,25 @@ class RecentTransactions extends StatelessWidget {
   }
 
   Widget _buildTransactionItem(BuildContext context, TransactionModel transaction) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final isIncome = transaction.type.name == 'income';
+    
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
         children: [
           CircleAvatar(
-            backgroundColor: transaction.type.name == 'income'
-                ? Colors.green.shade100
-                : Colors.red.shade100,
+            backgroundColor: isIncome
+                ? (isDark ? const Color(0xFF064E3B).withOpacity(0.3) : const Color(0xFFECFDF5))
+                : (isDark ? const Color(0xFF7F1D1D).withOpacity(0.3) : const Color(0xFFFEF2F2)),
             child: Icon(
-              transaction.type.name == 'income'
+              isIncome
                   ? Icons.arrow_upward
                   : Icons.arrow_downward,
-              color: transaction.type.name == 'income' ? Colors.green : Colors.red,
+              color: isIncome 
+                  ? const Color(0xFF10B981)
+                  : theme.colorScheme.error,
               size: 16,
             ),
           ),
@@ -82,16 +88,18 @@ class RecentTransactions extends StatelessWidget {
                 Text(
                   '${transaction.category.emoji} ${transaction.category.name} • ${Formatters.formatDate(transaction.date)}',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Colors.grey[600],
+                        color: Theme.of(context).textTheme.bodySmall?.color?.withOpacity(0.7),
                       ),
                 ),
               ],
             ),
           ),
           Text(
-            '${transaction.type.name == 'income' ? '+' : '-'}${Formatters.formatCurrency(transaction.amount)}',
+            '${isIncome ? '+' : '-'}${Formatters.formatCurrency(transaction.amount)}',
             style: TextStyle(
-              color: transaction.type.name == 'income' ? Colors.green : Colors.red,
+              color: isIncome 
+                  ? const Color(0xFF10B981)
+                  : theme.colorScheme.error,
               fontWeight: FontWeight.bold,
             ),
           ),

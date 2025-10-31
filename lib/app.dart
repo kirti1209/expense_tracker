@@ -43,27 +43,33 @@ class _ExpenseTrackerAppState extends State<ExpenseTrackerApp> {
 
         if (snapshot.hasError) {
           return MaterialApp(
-            home: Scaffold(
-              body: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.error, size: 64, color: Colors.red),
-                    SizedBox(height: 16),
-                    Text('Error initializing app: ${snapshot.error}'),
-                    SizedBox(height: 16),
-                    ElevatedButton(
-                      onPressed: () {
-                        setState(() {
-                          _initializationFuture = _initializeApp();
-                        });
-                      },
-                      child: Text('Retry'),
-                    ),
-                  ],
+            theme: AppTheme.lightTheme,
+            darkTheme: AppTheme.darkTheme,
+            themeMode: ThemeMode.system,
+            home: Builder(
+              builder: (context) => Scaffold(
+                body: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.error, size: 64, color: Theme.of(context).colorScheme.error),
+                      SizedBox(height: 16),
+                      Text('Error initializing app: ${snapshot.error}'),
+                      SizedBox(height: 16),
+                      ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            _initializationFuture = _initializeApp();
+                          });
+                        },
+                        child: Text('Retry'),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
+            debugShowCheckedModeBanner: false,
           );
         }
 
@@ -73,9 +79,11 @@ class _ExpenseTrackerAppState extends State<ExpenseTrackerApp> {
             builder: (context, state) {
               return MaterialApp(
                 title: 'Expense Tracker',
-                theme: state.settings.isDarkMode 
-                    ? AppTheme.darkTheme 
-                    : AppTheme.lightTheme,
+                theme: AppTheme.lightTheme,
+                darkTheme: AppTheme.darkTheme,
+                themeMode: state.settings.isDarkMode 
+                    ? ThemeMode.dark 
+                    : ThemeMode.light,
                 home: const MainNavigation(),
                 debugShowCheckedModeBanner: false,
               );

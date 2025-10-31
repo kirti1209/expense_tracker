@@ -31,7 +31,7 @@ class ExpenseChart extends StatelessWidget {
               Text(
                 'No expenses yet',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Colors.grey[600],
+                      color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.7),
                     ),
               ),
             ],
@@ -83,14 +83,15 @@ class ExpenseChart extends StatelessWidget {
   }
 
   List<PieChartSectionData> _prepareChartData() {
+    // Colors that work well in both light and dark themes
     final List<Color> colors = [
-      Colors.blue,
-      Colors.green,
-      Colors.orange,
-      Colors.purple,
-      Colors.red,
-      Colors.teal,
-      Colors.pink,
+      const Color(0xFF3B82F6), // Blue
+      const Color(0xFF10B981), // Green
+      const Color(0xFFF59E0B), // Orange
+      const Color(0xFF8B5CF6), // Purple
+      const Color(0xFFEF4444), // Red
+      const Color(0xFF14B8A6), // Teal
+      const Color(0xFFEC4899), // Pink
     ];
 
     int colorIndex = 0;
@@ -122,14 +123,15 @@ class ExpenseChart extends StatelessWidget {
   }
 
   Widget _buildLegend(List<PieChartSectionData> sections) {
+    // Colors that work well in both light and dark themes
     final List<Color> colors = [
-      Colors.blue,
-      Colors.green,
-      Colors.orange,
-      Colors.purple,
-      Colors.red,
-      Colors.teal,
-      Colors.pink,
+      const Color(0xFF3B82F6), // Blue
+      const Color(0xFF10B981), // Green
+      const Color(0xFFF59E0B), // Orange
+      const Color(0xFF8B5CF6), // Purple
+      const Color(0xFFEF4444), // Red
+      const Color(0xFF14B8A6), // Teal
+      const Color(0xFFEC4899), // Pink
     ];
 
     int colorIndex = 0;

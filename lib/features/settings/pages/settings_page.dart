@@ -36,7 +36,7 @@ class SettingsPage extends StatelessWidget {
                 const SizedBox(height: 16),
                 _buildDataManagementSection(context),
                 const SizedBox(height: 16),
-                _buildAppInfoSection(),
+                _buildAppInfoSection(context),
               ],
             );
           },
@@ -108,7 +108,7 @@ class SettingsPage extends StatelessWidget {
     );
   }
 
-  Widget _buildAppInfoSection() {
+  Widget _buildAppInfoSection(BuildContext context) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -117,11 +117,9 @@ class SettingsPage extends StatelessWidget {
           children: [
             Text(
               'App Information',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.grey[600],
-              ),
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
             const SizedBox(height: 12),
             _buildInfoItem('Version', '1.0.0'),
@@ -142,12 +140,16 @@ class SettingsPage extends StatelessWidget {
     return ListTile(
       leading: Icon(
         icon,
-        color: isDestructive ? Colors.red : Theme.of(context).primaryColor,
+        color: isDestructive 
+            ? Theme.of(context).colorScheme.error 
+            : Theme.of(context).primaryColor,
       ),
       title: Text(
         title,
         style: TextStyle(
-          color: isDestructive ? Colors.red : null,
+          color: isDestructive 
+              ? Theme.of(context).colorScheme.error 
+              : null,
         ),
       ),
       trailing: const Icon(Icons.chevron_right),
@@ -188,9 +190,9 @@ class SettingsPage extends StatelessWidget {
                 Navigator.of(context).pop();
                 context.read<SettingsBloc>().add(const ClearAllData());
               },
-              child: const Text(
+              child: Text(
                 "Clear All",
-                style: TextStyle(color: Colors.red),
+                style: TextStyle(color: Theme.of(context).colorScheme.error),
               ),
             ),
           ],
